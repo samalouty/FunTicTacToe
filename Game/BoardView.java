@@ -9,16 +9,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
 
 public class BoardView extends Application {
-    private static final int GRID_SIZE = 5;
+    private static final int GRID_SIZE = 4;
     private static final String EMPTY = " ";
     static GridPane gridPane = new GridPane();
     String[][] board = new String[GRID_SIZE][GRID_SIZE];
@@ -55,7 +51,7 @@ public class BoardView extends Application {
         Button button = new Button(EMPTY);
         button.setPrefSize(100, 100);
 //        button.setStyle("-fx-background-color: #FFE6E6E6; -fx-border-width: 0;");
-        button.setStyle("-fx-font-size: 0; -fx-background-color: transparent;");
+        button.setStyle("-fx-font-size: 30; -fx-background-color: transparent;");
 
         button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.5))));
         button.setOnAction(event -> {
@@ -63,35 +59,31 @@ public class BoardView extends Application {
             if (clickedButton.getText().equals(EMPTY)) {
                 if (xTurn) {
                     button.setText("X");
-                    File imageFile = new File("Game/X.png");
-                    Image image = new Image(imageFile.toURI().toString());
-                    ImageView imageView = new ImageView(image);
-                    imageView.setFitHeight(50);
-                    imageView.setFitWidth(50);
-                    button.setGraphic(imageView);
+//                    File imageFile = new File("Game/X.png");
+//                    Image image = new Image(imageFile.toURI().toString());
+//                    ImageView imageView = new ImageView(image);
+//                    imageView.setFitHeight(50);
+//                    imageView.setFitWidth(50);
+//                    button.setGraphic(imageView);
                     addToarray();
                 } else {
                     button.setText("O");
-                    File imageFile = new File("Game/O.png");
-                    Image image = new Image(imageFile.toURI().toString());
-                    ImageView imageView = new ImageView(image);
-                    imageView.setFitHeight(50);
-                    imageView.setFitWidth(50);
-                    button.setGraphic(imageView);
+//                    File imageFile = new File("Game/O.png");
+//                    Image image = new Image(imageFile.toURI().toString());
+//                    ImageView imageView = new ImageView(image);
+//                    imageView.setFitHeight(50);
+//                    imageView.setFitWidth(50);
+//                    button.setGraphic(imageView);
                     addToarray();
                 }
                 xTurn = !xTurn;
                 clickedButton.setDisable(true);
 
-                // Count the number of three-in-a-rows each player has. Sequences can be vertically, horizontally, or diagonally. Whoever has the most, wins.
-//                if(realSize(board) == 24){
-//                   if(checkWin().equals("O")) displayOWin();
-//                   else if (checkWin().equals("X")) {
-//                       displayXWin();
-//                   }
-//                   else displayDraw();
-//
-//                }
+                if(realSize(board) == (GRID_SIZE * GRID_SIZE) ){
+
+                    System.out.println(checkWin());
+
+                }
             }
         });
         return button;
@@ -108,8 +100,50 @@ public class BoardView extends Application {
         int countXD1 = 0;
         int countXD2 = 0;
 
-return null;
+        for (int i = 0; i < GRID_SIZE; i++) {
+            if(board[i] != null){
+               countXH += addHor(board[i], "X");
+               countOH += addHor(board[i], "O"); }
+        }
+
+        for(int j = 0; j<GRID_SIZE; j++){
+            for (int i = 0; i < GRID_SIZE - 2; i++) {
+                if(board[i][j].equals(board[i+1][j]) && board[i +1][j].equals(board[i+2][j]) && (board[i][j].equals("X") || board[i][j].equals("OX")))
+                    countXV++;
+                if(board[i][j].equals(board[i+1][j]) && board[i +1][j].equals(board[i+2][j]) && (board[i][j].equals("O") || board[i][j].equals("OX")))
+                    countOV++;
+
+
+            }
+        }
+
+        if(countXD1 + countXD2 + countXH + countXV > countOD1 + countOD2 + countOH + countOV)
+            return "X";
+        if (countXD1 + countXD2 + countXH + countXV < countOD1 + countOD2 + countOH + countOV) {
+            return "O";
+        }
+
+        return "D";
     }
+
+    // old rule 4 in row and 5 in a row only count as one
+//    public String countRow(String[] s){
+//        for(int i = 0; i<s.length-2; i++){
+//            if(s[i].equals(s[i + 1]) && s[i + 1].equals(s[i+2]))
+//                return s[i];
+//        }
+//        return EMPTY;
+//    }
+
+   public int addHor(String[] s , String s1){
+        int res = 0;
+       for (int i = 0; i < s.length -2 ; i++) {
+           if(s[i].equals(s[i + 1]) && s[i + 1].equals(s[i+2]) && s[i].equals(s1))
+               res++;
+       }
+       return res;
+   }
+
 
 
     private int realSize(String[][] board) {
