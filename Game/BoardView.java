@@ -21,7 +21,7 @@ public class BoardView extends Application {
     private static final int GRID_SIZE = 5;
     private static final String EMPTY = " ";
     static GridPane gridPane = new GridPane();
-    String[][] board = new String[5][5];
+    String[][] board = new String[GRID_SIZE][GRID_SIZE];
 
 
     private Button[][] buttons = new Button[GRID_SIZE][GRID_SIZE];
@@ -84,20 +84,38 @@ public class BoardView extends Application {
                 clickedButton.setDisable(true);
 
                 // Count the number of three-in-a-rows each player has. Sequences can be vertically, horizontally, or diagonally. Whoever has the most, wins.
-                if(realSize(board) == 24){
-                   //write winner code here
-                }
+//                if(realSize(board) == 24){
+//                   if(checkWin().equals("O")) displayOWin();
+//                   else if (checkWin().equals("X")) {
+//                       displayXWin();
+//                   }
+//                   else displayDraw();
+//
+//                }
             }
         });
         return button;
     }
 
+    private String checkWin() {
+        int countOH = 0;
+        int countOV = 0;
+        int countOD1 = 0;
+        int countOD2 = 0;
+
+        int countXH = 0;
+        int countXV = 0;
+        int countXD1 = 0;
+        int countXD2 = 0;
+
+return null;
+    }
 
 
     private int realSize(String[][] board) {
         int res = 0;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
                 if(board[i][j].equals("X") || board[i][j].equals("O")){
                     res++;
                 }
@@ -106,8 +124,8 @@ public class BoardView extends Application {
         return res;}
 
     public void addToarray(){
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
                 board[i][j] = getButton(i, j).getText();
             }
         }
@@ -122,9 +140,9 @@ public class BoardView extends Application {
     }
 
     public void printarray(String[][] s){
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < GRID_SIZE; i++) {
             System.out.println();
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
                 System.out.print(s[i][j] + " ");
             }
         }
