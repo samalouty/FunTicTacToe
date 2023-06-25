@@ -2,26 +2,35 @@ package Game;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class BoardView extends Application {
     private static final int GRID_SIZE = 5;
     private static final String EMPTY = " ";
+    static GridPane gridPane = new GridPane();
+    String[][] board = new String[5][5];
+
 
     private Button[][] buttons = new Button[GRID_SIZE][GRID_SIZE];
     private boolean xTurn = true;
 
     @Override
     public void start(Stage primaryStage) {
-        BorderPane borderPane = new BorderPane();
-        GridPane gridPane = new GridPane();
 
-        gridPane.setStyle("-fx-background-color: #FFE6E6E6;");
+        //gridPane.setStyle("-fx-background-color: #FFE6E6E6;");
 
         gridPane.setAlignment(Pos.CENTER);
 
@@ -33,22 +42,10 @@ public class BoardView extends Application {
             }
         }
 
-        Line vLine1 = new Line(100, 0, 100, 500);
-        Line vLine2 = new Line(200, 0, 200, 500);
-        Line vLine3 = new Line(300, 0, 300, 500);
-        Line vLine4 = new Line(400, 0, 400, 500);
-
-        Line hLine1 = new Line(0, 100, 500, 100);
-        Line hLine2 = new Line(0, 200, 500, 200);
-        Line hLine3 = new Line(0, 300, 500, 300);
-        Line hLine4 = new Line(0, 400, 500, 400);
-
-
-        borderPane.getChildren().addAll(vLine1, vLine2, vLine3, vLine4, hLine1, hLine2, hLine3, hLine4);
 
 
 
-        Scene scene = new Scene(borderPane, 500, 500);
+        Scene scene = new Scene(gridPane, 600, 600);
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -56,23 +53,81 @@ public class BoardView extends Application {
 
     private Button createButton() {
         Button button = new Button(EMPTY);
-        button.setPrefSize(50, 50);
+        button.setPrefSize(100, 100);
+//        button.setStyle("-fx-background-color: #FFE6E6E6; -fx-border-width: 0;");
+        button.setStyle("-fx-font-size: 0; -fx-background-color: transparent;");
+
+        button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1.5))));
         button.setOnAction(event -> {
             Button clickedButton = (Button) event.getSource();
             if (clickedButton.getText().equals(EMPTY)) {
                 if (xTurn) {
-                    clickedButton.setText("X");
+                    button.setText("X");
+                    File imageFile = new File("Game/X.png");
+                    Image image = new Image(imageFile.toURI().toString());
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitHeight(50);
+                    imageView.setFitWidth(50);
+                    button.setGraphic(imageView);
+                    addToarray();
                 } else {
-                    clickedButton.setText("O");
+                    button.setText("O");
+                    File imageFile = new File("Game/O.png");
+                    Image image = new Image(imageFile.toURI().toString());
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitHeight(50);
+                    imageView.setFitWidth(50);
+                    button.setGraphic(imageView);
+                    addToarray();
                 }
                 xTurn = !xTurn;
                 clickedButton.setDisable(true);
 
-                // Call a method to check for a winner and update the game state
-                // Implement this logic based on the Tic Tac Toe rules
+                // Count the number of three-in-a-rows each player has. Sequences can be vertically, horizontally, or diagonally. Whoever has the most, wins.
+                if(realSize(board) == 24){
+                   //write winner code here
+                }
             }
         });
         return button;
+    }
+
+
+
+    private int realSize(String[][] board) {
+        int res = 0;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if(board[i][j].equals("X") || board[i][j].equals("O")){
+                    res++;
+                }
+            }
+        }
+        return res;}
+
+    public void addToarray(){
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                board[i][j] = getButton(i, j).getText();
+            }
+        }
+    }
+
+    public static Button getButton(int row, int col) {
+        for (javafx.scene.Node node : gridPane.getChildren()) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col)
+                return (Button) node;
+        }
+        return null;
+    }
+
+    public void printarray(String[][] s){
+        for (int i = 0; i < 5; i++) {
+            System.out.println();
+            for (int j = 0; j < 5; j++) {
+                System.out.print(s[i][j] + " ");
+            }
+        }
     }
 
     public static void main(String[] args) {
