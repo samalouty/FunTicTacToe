@@ -14,10 +14,19 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class BoardView extends Application {
-    private static final int GRID_SIZE = 4;
+    private static final int GRID_SIZE = 5;
     private static final String EMPTY = " ";
     static GridPane gridPane = new GridPane();
     String[][] board = new String[GRID_SIZE][GRID_SIZE];
+    int countOH = 0;
+    int countOV = 0;
+    int countOD1 = 0;
+    int countOD2 = 0;
+
+    int countXH = 0;
+    int countXV = 0;
+    int countXD1 = 0;
+    int countXD2 = 0;
 
 
     private Button[][] buttons = new Button[GRID_SIZE][GRID_SIZE];
@@ -90,40 +99,96 @@ public class BoardView extends Application {
     }
 
     private String checkWin() {
-        int countOH = 0;
-        int countOV = 0;
-        int countOD1 = 0;
-        int countOD2 = 0;
 
-        int countXH = 0;
-        int countXV = 0;
-        int countXD1 = 0;
-        int countXD2 = 0;
 
         for (int i = 0; i < GRID_SIZE; i++) {
-            if(board[i] != null){
-               countXH += addHor(board[i], "X");
-               countOH += addHor(board[i], "O"); }
-        }
+            for (int j = 0; j < GRID_SIZE - 2; j++) {
+                if(board[i][j].equals(board[i][j + 1]) && board[i][j + 1].equals(board[i][j + 2]) && (board[i][j].equals("X") || board[i][j].equals("OX"))){
+                    countXH++;
+                    getButton(i,j).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i ,j + 1).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i ,j + 2).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+
+                }
+                if(board[i][j].equals(board[i][j + 1]) && board[i][j + 1].equals(board[i][j + 2]) && (board[i][j].equals("O") || board[i][j].equals("OX"))){
+                    countOH++;
+                    getButton(i,j).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i ,j+ 1).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i ,j + 2).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+
+                }
+            }}
 
         for(int j = 0; j<GRID_SIZE; j++){
             for (int i = 0; i < GRID_SIZE - 2; i++) {
+                assert board[i] != null;
                 if(board[i][j].equals(board[i+1][j]) && board[i +1][j].equals(board[i+2][j]) && (board[i][j].equals("X") || board[i][j].equals("OX")))
-                    countXV++;
-                if(board[i][j].equals(board[i+1][j]) && board[i +1][j].equals(board[i+2][j]) && (board[i][j].equals("O") || board[i][j].equals("OX")))
+                {countXV++;
+                    getButton(i,j).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 1,j).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 2,j).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+
+
+                }
+                if(board[i][j].equals(board[i+1][j]) && board[i +1][j].equals(board[i+2][j]) && (board[i][j].equals("O") || board[i][j].equals("OX"))) {
                     countOV++;
+                    getButton(i,j).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 1,j).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 2,j).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
 
 
+                }
             }
         }
 
-        if(countXD1 + countXD2 + countXH + countXV > countOD1 + countOD2 + countOH + countOV)
-            return "X";
-        if (countXD1 + countXD2 + countXH + countXV < countOD1 + countOD2 + countOH + countOV) {
-            return "O";
+        for (int i = 0; i < GRID_SIZE - 2; i++) {
+            for (int j = 0; j < GRID_SIZE -2; j++) {
+                if(board[i][j].equals(board[i + 1][j + 1]) && board[i + 1][j + 1].equals(board[i + 2][j + 2]) && board[i][j].equals("X")){
+                    countXD1++;
+                    getButton(i,j).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 1,j + 1).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 2,j + 2).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+
+
+                }
+                if(board[i][j].equals(board[i + 1][j + 1]) && board[i + 1][j + 1].equals(board[i + 2][j + 2]) && board[i][j].equals("O")){
+                    countOD1++;
+                    getButton(i,j).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 1,j + 1).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 2,j + 2).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+
+
+                }
+            }
         }
 
-        return "D";
+
+        for (int i = 0; i < GRID_SIZE ; i++) {
+            for (int j = 0; j< GRID_SIZE ; j++) {
+            if(!outOfBoard(i + 1, j - 1) && !outOfBoard(i + 2, j - 2))    {
+                if(board[i][j].equals(board[i + 1][j - 1]) && board[i + 1][j - 1].equals(board[i + 2][j - 2]) && board[i][j].equals("X"))
+                {countXD2++;
+                    getButton(i,j).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 1,j - 1).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 2,j - 2).setStyle("-fx-background-color: green; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+
+                }
+                if(board[i][j].equals(board[i + 1][j - 1]) && board[i + 1][j - 1].equals(board[i + 2][j - 2]) && board[i][j].equals("O"))
+                {countOD2++;
+                    getButton(i,j).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 1,j - 1).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                    getButton(i + 2,j - 2).setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 30px;");
+                }
+            }}
+        }
+
+        if(countXD1 + countXD2 + countXH + countXV > countOD1 + countOD2 + countOH + countOV)
+            return "X Won with " + countXH + " Horizontal points, " + countXV + " Vertical points, and " + (countXD1 + countXD2) + " Diagonal points";
+        if (countXD1 + countXD2 + countXH + countXV < countOD1 + countOD2 + countOH + countOV) {
+            return "O Won with " + countOH + " Horizontal points, " + countOV + " Vertical points, and " + (countOD1 + countOD2) + " Diagonal points";
+        }
+
+        return "Draw with " + countOH + " Horizontal points, " + countOV + " Vertical points, and " + (countOD1 + countOD2) + " Diagonal points";
     }
 
     // old rule 4 in row and 5 in a row only count as one
@@ -142,6 +207,10 @@ public class BoardView extends Application {
                res++;
        }
        return res;
+   }
+
+   public static boolean outOfBoard(int x, int y){
+        return (x>(GRID_SIZE -1) || x<0 || y>(GRID_SIZE -1) || y < 0 );
    }
 
 
@@ -182,7 +251,5 @@ public class BoardView extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) {launch(args);}
 }
