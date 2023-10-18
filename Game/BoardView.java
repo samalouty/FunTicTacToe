@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +16,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class BoardView extends Application {
+    private Label resultLabel = new Label();
     private static final int GRID_SIZE = 5;
     private static final String EMPTY = " ";
     static GridPane gridPane = new GridPane();
@@ -45,12 +48,17 @@ public class BoardView extends Application {
                 buttons[row][col] = button;
                 gridPane.add(button, col, row);
             }
+
+
+
         }
 
 
+        resultLabel.setAlignment(Pos.CENTER); // Center-align the label
+        resultLabel.setVisible(false); // Initially hide the label
+        resultLabel.setStyle("-fx-font-size: 20;"); // Set font size
 
-
-        Scene scene = new Scene(gridPane, 600, 600);
+        Scene scene = new Scene(new BorderPane(gridPane, resultLabel, null, null, null), 600, 650); // Add resultLabel to the BorderPane
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -88,9 +96,9 @@ public class BoardView extends Application {
                 xTurn = !xTurn;
                 clickedButton.setDisable(true);
 
-                if(realSize(board) == (GRID_SIZE * GRID_SIZE) ){
+                if(realSize(board) == (GRID_SIZE * GRID_SIZE) - 1){
 
-                    System.out.println(checkWin());
+                    checkWin();
 
                 }
             }
@@ -98,7 +106,7 @@ public class BoardView extends Application {
         return button;
     }
 
-    private String checkWin() {
+    private void checkWin() {
 
 
         for (int i = 0; i < GRID_SIZE; i++) {
@@ -182,13 +190,16 @@ public class BoardView extends Application {
             }}
         }
 
-        if(countXD1 + countXD2 + countXH + countXV > countOD1 + countOD2 + countOH + countOV)
-            return "X Won with " + countXH + " Horizontal points, " + countXV + " Vertical points, and " + (countXD1 + countXD2) + " Diagonal points";
-        if (countXD1 + countXD2 + countXH + countXV < countOD1 + countOD2 + countOH + countOV) {
-            return "O Won with " + countOH + " Horizontal points, " + countOV + " Vertical points, and " + (countOD1 + countOD2) + " Diagonal points";
+        if (countXD1 + countXD2 + countXH + countXV > countOD1 + countOD2 + countOH + countOV) {
+            resultLabel.setText("X Won with " + countXH + " Horizontal points, " + countXV + " Vertical points, and " + (countXD1 + countXD2) + " Diagonal points");
+        } else if (countXD1 + countXD2 + countXH + countXV < countOD1 + countOD2 + countOH + countOV) {
+            resultLabel.setText("O Won with " + countOH + " Horizontal points, " + countOV + " Vertical points, and " + (countOD1 + countOD2) + " Diagonal points");
+        } else {
+            resultLabel.setText("Draw with " + countOH + " Horizontal points, " + countOV + " Vertical points, and " + (countOD1 + countOD2) + " Diagonal points");
         }
 
-        return "Draw with " + countOH + " Horizontal points, " + countOV + " Vertical points, and " + (countOD1 + countOD2) + " Diagonal points";
+        resultLabel.setVisible(true);
+
     }
 
     // old rule 4 in row and 5 in a row only count as one
